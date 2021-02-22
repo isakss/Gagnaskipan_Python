@@ -1,23 +1,14 @@
-#Nodes and list WITH encapsulating class
-
 class Node:
     def __init__(self, data=None, next=None):
         self.data = data
         self.next = next
 
+#Nodes and list WITH encapsulating class
 class LinkedList:
     def __init__(self):
         self.head = None
         self.tail = None
         self.size = 0
-
-    def print_list(self):
-        current_node = self.head
-
-        while current_node != None:
-            print(current_node.data, end=" ")
-            current_node = current_node.next
-        print("")
 
     def push_front(self, value):
         self.size += 1
@@ -49,16 +40,47 @@ class LinkedList:
             self.tail = self.head
 
         return ret_val
+    
+    def pop_back(self):
+        current_node = self.head
+        if self.tail == None:
+            return None
+        elif self.size == 1:
+            self.tail = None
+            self.head = self.tail
+        else:
+            while current_node.next != None:
+                former_node = current_node
+                current_node = current_node.next
+            
+            former_node.next = None
 
+        self.size -= 1
+
+        return current_node.data
+    
+    def get_size(self):
+        return self.size
+    
+    def __str__(self):
+        curr_node = self.head
+        ret_str = ""
+
+        while curr_node != None:
+            ret_str += str(curr_node.data) + " "
+            curr_node = curr_node.next
+        
+        return ret_str
+            
 class Stack:
     def __init__(self):
         self.container = LinkedList()
 
     def push(self, value):
-        self.container.push_front(value)
+        self.container.push_back(value)
 
     def pop(self):
-        self.container.pop_front()
+        self.container.pop_back()
 
 class Queue:
     def __init__(self):
@@ -76,18 +98,22 @@ lis.push_front(3)
 lis.push_front(2)
 lis.push_front(1)
 
-lis.print_list()
+print(lis)
 
 lis.push_back(4)
 lis.push_back(5)
 
-lis.print_list()
+print(lis)
 
 lis.pop_front()
 lis.pop_front()
 lis.pop_front()
 
-lis.print_list()
+print(lis)
+
+print(lis.pop_back())
+
+print(lis)
 
 """
 def print_list(head_element):
