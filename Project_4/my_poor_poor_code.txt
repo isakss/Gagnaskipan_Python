@@ -1,0 +1,31 @@
+def insert_rec(self, key, data, node):
+        if node == None:
+            new_node = BST_Node(key, data)
+            return new_node
+        elif key > node.key:
+            node.right = self.insert_rec(key, data, node.right)
+        elif key < node.key:
+            node.left = self.insert_rec(key, data, node.left)
+        else:
+            raise ItemExistsException()
+        return node
+
+  def update_rec(self, key, data, node):
+        if node == None:
+            raise NotFoundException()
+        elif key > node.key:
+            self.update_rec(key, data, node.right)
+        elif key < node.key:
+            self.update_rec(key, data, node.left)
+        else:
+            node.data = data
+
+def find_rec(self, key, node):
+        if node == None:
+            return
+        elif key > node.key:
+            return self.find_rec(key, node.right)
+        elif key < node.key:
+            return self.find_rec(key, node.left)
+        else:
+            return node.data
