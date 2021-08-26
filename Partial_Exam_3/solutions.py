@@ -36,8 +36,6 @@ class HashTable:
         else:
             pass
 
-
-
 class PrefixParsingTreeNode:
     def __init__(self, token, left, right):
         self.token = token
@@ -87,40 +85,79 @@ class PrefixParsingTree:
         return self.preorder_calculation_rec(self.root)
 
 class FileTreeNode:
-    def __init__(self, data = None):
-        self.data = data
+    def __init__(self):
+        self.string = None
         self.children = []
 
-class FileTree:
-    def __init__(self):
-        self.root = None
-    
-    def _populate_tree_rec(self, node, file_string, level = 0):
-        if file_string == "":
-            return None
-        elif file_string[0] == "{":
-            new_node = FileTreeNode(file_string[1:])
-        elif file_string[0] == "}":
-            node.children.append(new_node)          
+def parser_bracket_string_rec(current_node, bracket_str, str_index):
+    current_bullet_string = ""
+
+    while True:
+        if bracket_str[str_index] == "{":
+            next_node = FileTreeNode()
+            current_node.children.append(next_node)
+            str_index = parser_bracket_string_rec(next_node, bracket_str, str_index + 1)
+        elif bracket_str[str_index] == "}":
+            current_node.string = current_bullet_string
+            return str_index + 1
+        else:
+            current_bullet_string += bracket_str[str_index]
+            str_index += 1
 
 def parse_bracket_file(filename):
     # IMPLEMENT THIS OPERATION
     # YOU CAN IMPLEMENT ONE OR MORE CLASSES
     # YOU CAN MAKE HELPER FUNCTIONS AS NEEDED
     input_file = open(filename)
-    return None
+    bracket_str = input_file.readline()
+    i = 0
+
+    while bracket_str[i] != "{":
+        i += 1
+    
+    root = FileTreeNode()
+    parser_bracket_string_rec(root, bracket_str, i+1)
+
+    return root
+
+def write_bullets_rec(file_object, node, level):
+    for child in node.children:
+        for _ in range(level):
+            file_object.write("\t")
+        file_object.write(child.string + "\n")
+        write_bullets_rec(file_object, child, level + 1)
 
 def write_bulleted_file(filename, my_tree):
     # IMPLEMENT THIS OPERATION
     # YOU CAN IMPLEMENT ONE OR MORE CLASSES
     # YOU CAN MAKE HELPER FUNCTIONS AS NEEDED
     output_file = open(filename, "w")
+    write_bullets_rec(output_file, my_tree, 1)
+
+def write_labelled_file_rec(file_object, node, level):
+    for i in range(len(node.children)):
+        child = node.children[i]
+
+        for _ in range(level):
+            file_object.write("\t")
+        
+        if level == 0:
+            file_object.write(str(i + 1) + ".\t")
+        elif level == 1:
+            file_object.write(chr(ord("a") + i) + ")\t")
+        else:
+            file_object.write("-\t")
+
+        file_object.write(child.string + "\n")
+        write_labelled_file_rec(file_object, child, level + 1)
+
 
 def write_labelled_file(filename, my_tree):
     # IMPLEMENT THIS OPERATION
     # YOU CAN IMPLEMENT ONE OR MORE CLASSES
     # YOU CAN MAKE HELPER FUNCTIONS AS NEEDED
     output_file = open(filename, "w")
+    write_labelled_file_rec(output_file, my_tree, 0)
 
 def test_hash_table():
     t = HashTable()

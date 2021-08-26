@@ -61,9 +61,74 @@ class BinaryTree:
         self._print_tree_postorder_rec(self.root)
         print("")
 
+class GeneralTreeNode:
+    def __init__(self, data = None):
+        self.data = data
+        self.children = []
+
+class GeneralTree:
+    def __init__(self):
+        self.root = None
+
+    def populate_tree_rec(self, level = 0):
+        tree_input = input()
+
+        if tree_input == "":
+            return None
+
+        node = GeneralTreeNode(tree_input)
+        level += 1
+
+        while True:
+            print(level * "   |" + "--NODE :", end=" ")
+            child_node = self.populate_tree_rec(level)
+            if child_node == None:
+                break
+            node.children.append(child_node)
+        return node
+
+    def populate_tree(self):
+        print("ROOT :", end=" ")
+        self.root = self.populate_tree_rec()
+    
+    def _print_tree_preorder(self, node):
+        if node == None:
+            return
+        print(str(node.data), end=" ")
+        for child_node in node.children:
+            self._print_tree_preorder(child_node)
+    
+    def print_preorder(self, node):
+        self._print_tree_preorder(node)
+        print("")
+    
+    def _print_tree_postorder(self, node):
+        if node == None:
+            return
+        for child_node in node.child:
+            self._print_tree_postorder(child_node)
+        print(str(node.data), end=" ")
+    
+    def print_postorder(self, node):
+        self._print_tree_postorder(node)
+        print("")
+    
+    def print_tree(self):
+        print("PREORDER:")
+        self.print_preorder(self.root)
+
+        print("POSTORDER:")
+        self.print_postorder(self.root)
 
 if __name__ == "__main__":
     bt = BinaryTree()
 
     bt.populate_tree()
     bt.print_tree()
+
+    gt = GeneralTree()
+
+    gt.populate_tree()
+    gt.print_tree()
+
+
